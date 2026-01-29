@@ -56,5 +56,5 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/-ci-cd2:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/-ci-cd2:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/ci-cd2:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/ci-cd2:${{ github.sha }}
