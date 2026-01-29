@@ -5,8 +5,6 @@ export default function App() {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
-
   async function send() {
     if (!prompt.trim()) return;
     const userMsg = { role: "user", text: prompt };
@@ -15,7 +13,7 @@ export default function App() {
     setLoading(true);
 
     try {
-      const res = await fetch(`${apiUrl}/generate`, {
+      const res = await fetch("/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: userMsg.text }),
@@ -46,7 +44,7 @@ export default function App() {
 
       <div style={{ border: "1px solid #ddd", padding: 16, borderRadius: 8, minHeight: 300 }}>
         {messages.map((m, i) => (
-          <div key={i} style={{ marginBottom: 12 }}>
+          <div key={i} style={{ marginBottom: 12 }} data-testid={`msg-${m.role}`}>
             <b>{m.role}:</b> {m.text}
           </div>
         ))}

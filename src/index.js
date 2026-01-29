@@ -76,6 +76,10 @@ app.post("/generate", async (req, res) => {
             return res.status(400).json({ error: "Body must contain { prompt: string }" });
         }
 
+        if (process.env.MOCK === "1") {
+            return res.json({ text: `mock: ${prompt}`, raw: null });
+        }
+
         const ai = new GoogleGenAI({ apiKey });
 
         const result = await ai.models.generateContent({
