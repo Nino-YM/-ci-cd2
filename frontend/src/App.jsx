@@ -20,8 +20,19 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: userMsg.text }),
       });
-      const data = await res.json();
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error(`API returned non-JSON (status ${res.status})`);
+      }
+
+      if (!res.ok) {
+        throw new Error(data?.error || `HTTP ${res.status}`);
+      }
+
       setMessages((m) => [...m, { role: "assistant", text: data.text || "(no text)" }]);
+
     } catch (e) {
       setMessages((m) => [...m, { role: "assistant", text: `Error: ${String(e)}` }]);
     } finally {
