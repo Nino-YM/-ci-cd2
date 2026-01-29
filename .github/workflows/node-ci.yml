@@ -5,6 +5,7 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -31,9 +32,19 @@ jobs:
       - name: Test
         run: npm test
 
+      - name: Audit dependencies (high)
+        run: npm audit --audit-level=high
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+
   build-image:
     runs-on: ubuntu-latest
-    needs: build
+    needs: [build, secret-scan]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
@@ -58,3 +69,24 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/ci-cd2:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/ci-cd2:${{ github.sha }}
+
+  release:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create tag and push
+        run: |
+          TAG="v${{ github.run_number }}"
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Create GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="v${{ github.run_number }}"
+          gh release create "$TAG" --title "Release $TAG" --notes "Automated release"
