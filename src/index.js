@@ -5,6 +5,13 @@ const app = express();
 app.use(express.json());
 
 const port = process.env.PORT || 3000;
+const cors = require("cors");
+
+app.use(cors({
+    origin: ["http://localhost:5173", "http://localhost:4173"],
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"],
+}));
 
 app.get("/", (req, res) => {
     res.json({ ok: true, service: "gemini-api" });
