@@ -14,3 +14,10 @@ The React Compiler is not enabled on this template because of its impact on dev 
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+TEST E2E
+
+Donc pour lancer l'image sans le mock (qui est plutot pour tester) = docker run --rm -p 3000:3000 -e GOOGLE_API_KEY="clé_gémini" ci-cd-2:local
+Pour lancer avec le mock qui utilise pas les tokens gemini pour run les tests e2e tranquille = docker run --rm -p 3000:3000 -e MOCK=1 -e GOOGLE_API_KEY="clé_gémini" ci-cd-2:local
+
