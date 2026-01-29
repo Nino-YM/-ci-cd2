@@ -1,0 +1,5 @@
+node_modules
+.git
+.github
+.husky
+npm-debug.log
